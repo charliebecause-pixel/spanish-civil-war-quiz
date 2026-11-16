@@ -10,6 +10,13 @@ updates:
     cooldown:
       default-days: 3
     open-pull-requests-limit: 5
+    ignore:
+      # The type descriptions for Node must match the Node the site runs on
+      # (24, set in .github/workflows/ci.yml). Newer ones would let code use
+      # features Node 24 does not have without the type check noticing.
+      # Remove this when CI moves to a newer Node.
+      - dependency-name: '@types/node'
+        update-types: [version-update:semver-major]
     groups:
       minor-and-patch:
         update-types: [minor, patch]

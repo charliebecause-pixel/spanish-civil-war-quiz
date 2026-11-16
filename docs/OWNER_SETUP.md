@@ -118,7 +118,7 @@ Tell Claude "branch rule is on". Claude will try to push straight to `main` to p
 22. Cloudflare starts a build of `main`. **This first build is expected to fail.** The log will say the site address is still a placeholder. That is a safety check: the real site cannot be published until you choose a domain. Nothing is wrong.
 23. Go back to your pull request on GitHub and reload the page.
 24. A new comment from **cloudflare-workers-and-pages** appears within a few minutes, with a **Branch Preview URL**. Click it.
-25. You should see a page headed "60 second political ideology test" and the line "The test is being prepared. Check back soon."
+25. You should see a page headed "60 second political ideology test".
 26. Copy the Branch Preview URL, give it to Claude and say "Cloudflare is connected".
 
 If the preview build fails too, open the failed deployment in Cloudflare, click **View details**, copy the log text and give it to Claude.

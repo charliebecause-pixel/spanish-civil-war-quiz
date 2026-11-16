@@ -1,0 +1,47 @@
+{
+  "siteUrl": "https://domain-not-chosen.example",
+  "securityContact": "databecause@protonmail.com",
+  "analytics": { "cloudflareWebAnalytics": true },
+  "ads": {
+    "enabled": false,
+    "mode": "placeholder",
+    "networks": [],
+    "slots": {}
+  },
+  "affiliates": [],
+  "partners": [
+    {
+      "id": "cloudflare",
+      "name": "Cloudflare",
+      "role": "hosting",
+      "policyUrl": "https://www.cloudflare.com/privacypolicy/",
+      "cookies": [],
+      "purpose": {
+        "en": "Hosts and delivers the site, and counts visits with Cloudflare Web Analytics, which uses no cookies. Cloudflare processes your IP address to deliver pages and to protect the site from attacks.",
+        "es": "Aloja y entrega el sitio, y cuenta las visitas con Cloudflare Web Analytics, que no usa cookies. Cloudflare trata tu dirección IP para entregar las páginas y proteger el sitio frente a ataques."
+      }
+    },
+    {
+      "id": "sentry",
+      "name": "Sentry (Functional Software, Inc.)",
+      "role": "error-tracking",
+      "policyUrl": "https://sentry.io/privacy/",
+      "cookies": [],
+      "purpose": {
+        "en": "Receives a technical report when the site's code fails in your browser: the error, the page address and your browser type. It is set up not to store IP addresses.",
+        "es": "Recibe un informe técnico cuando el código del sitio falla en tu navegador: el error, la dirección de la página y el tipo de navegador. Está configurado para no guardar direcciones IP."
+      }
+    },
+    {
+      "id": "better-stack",
+      "name": "Better Stack",
+      "role": "uptime",
+      "policyUrl": "https://betterstack.com/privacy",
+      "cookies": [],
+      "purpose": {
+        "en": "Checks from the outside that the site is up and hosts our status page. It receives no information about visitors to this site.",
+        "es": "Comprueba desde fuera que el sitio funciona y aloja nuestra página de estado. No recibe ninguna información sobre quienes visitan este sitio."
+      }
+    }
+  ]
+}

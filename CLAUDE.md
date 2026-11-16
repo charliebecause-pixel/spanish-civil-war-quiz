@@ -4,16 +4,23 @@ A quick political compass questionnaire to match personal ideological leanings
 
 Read docs/PROJECT_BRIEF.md for what we're building and docs/LAUNCH_CHECKLIST.md for what “ready to launch” means. Keep this file short; put detail in docs/.
 
+The approved design is docs/ARCHITECTURE.md: a static site with no accounts and no database. The database and sign-in rules below apply only if that ever changes (docs/decisions/0001).
+
 ## Commands
 
-Fill these in during setup and keep them current.
+Keep these current. Use `corepack pnpm`, which needs no setup; plain `pnpm` works too if it is installed.
 
-- Install:
-- Run locally:
-- Seed fake data:
-- Test:
-- Lint and type check:
-- Build:
+- Install: `corepack pnpm install`
+- Run locally: `corepack pnpm dev`, then open http://localhost:4321
+- Seed fake data: nothing to run. Local, preview and staging builds read `config/site.fake.json` automatically (docs/decisions/0005).
+- Test: `corepack pnpm test` (unit). For end-to-end: `corepack pnpm build`, then `corepack pnpm test:e2e`.
+- Lint and type check: `corepack pnpm lint` and `corepack pnpm typecheck`
+- Build: `corepack pnpm build`
+- Everything above in one go: `corepack pnpm check`
+- Dependency audit: `corepack pnpm audit --audit-level=moderate`
+- Preview the built site with security headers and `/go/` redirects: `corepack pnpm preview`, then open http://127.0.0.1:8788
+
+The secret scan (gitleaks) and the dependency scan (OSV-Scanner) run in CI on every pull request; see .github/workflows/ci.yml.
 
 ## Before you call a task done
 

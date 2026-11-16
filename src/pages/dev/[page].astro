@@ -1,0 +1,45 @@
+---
+// A test page for the ad slot and paid-link components. It is built for
+// local, preview and staging only, and never for production, so its text is
+// for developers and is not translated.
+import AdSlot from '../../components/AdSlot.astro';
+import AffiliateLink from '../../components/AffiliateLink.astro';
+import { siteConfig, siteEnv } from '../../config';
+import Base from '../../layouts/Base.astro';
+
+export function getStaticPaths() {
+  return siteEnv === 'production' ? [] : [{ params: { page: 'components' } }];
+}
+
+const slotNames = Object.keys(siteConfig.ads.slots);
+---
+
+<Base
+  locale="en"
+  path="/dev/components/"
+  title="Component test page"
+  description="Developer test page."
+  translated={false}
+>
+  <h1>Component test page</h1>
+  <p>Shown on local, preview and staging builds only. Everything here uses fake data.</p>
+
+  <h2>Ad slots</h2>
+  {slotNames.map((name) => (
+    <AdSlot name={name} locale="en" />
+  ))}
+  <p id="after-ad">
+    This paragraph sits right after the ad slot. It must not move when an ad loads.
+  </p>
+
+  <h2>Paid links</h2>
+  <ul>
+    {siteConfig.affiliates.map((link) => (
+      <li>
+        <AffiliateLink slug={link.slug} locale="en">
+          {link.slug}
+        </AffiliateLink>
+      </li>
+    ))}
+  </ul>
+</Base>

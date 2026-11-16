@@ -1,0 +1,23 @@
+# dependencies
+node_modules/
+
+# build output and tool caches
+dist/
+.astro/
+.wrangler/
+
+# test output
+test-results/
+playwright-report/
+coverage/
+
+# secrets and local settings: never commit these
+.env
+.env.*
+!.env.example
+.dev.vars
+
+# editor and OS noise
+.DS_Store
+Thumbs.db
+*.log

@@ -1,0 +1,34 @@
+---
+// The only way a paid or partner link may be put on a page. It always goes
+// through /go/<slug>, always carries rel="sponsored noopener", and always shows
+// the disclosure right beside the link.
+import { siteConfig } from '../config';
+import { t, type Locale } from '../i18n';
+import { affiliatePath } from '../lib/affiliate';
+
+interface Props {
+  /** A slug from `affiliates` in the site config. */
+  slug: string;
+  locale: Locale;
+}
+
+const { slug, locale } = Astro.props;
+
+if (!siteConfig.affiliates.some((link) => link.slug === slug)) {
+  throw new Error(`Affiliate link "${slug}" is not defined under affiliates in the site config.`);
+}
+---
+
+<span class="affiliate">
+  <a href={affiliatePath(slug)} rel="sponsored noopener" data-affiliate={slug}>
+    <slot />
+  </a>{' '}
+  <small class="affiliate__disclosure">({t(locale, 'affiliate.disclosure')})</small>
+</span>
+
+<style>
+  .affiliate__disclosure {
+    color: var(--color-muted);
+    font-size: 0.875rem;
+  }
+</style>

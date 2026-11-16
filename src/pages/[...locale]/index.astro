@@ -1,0 +1,24 @@
+---
+// Home page. The quiz itself is the first feature after foundations; until
+// then this page only proves the layout, languages and tooling work.
+import { localeStaticPaths, t, type Locale } from '../../i18n';
+import Base from '../../layouts/Base.astro';
+
+export const getStaticPaths = localeStaticPaths;
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+---
+
+<Base
+  locale={locale}
+  path="/"
+  title={t(locale, 'site.name')}
+  description={t(locale, 'site.description')}
+>
+  <h1>{t(locale, 'home.heading')}</h1>
+  <p>{t(locale, 'home.comingSoon')}</p>
+</Base>

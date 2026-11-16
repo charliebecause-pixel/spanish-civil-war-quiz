@@ -1,0 +1,79 @@
+---
+import '../styles/global.css';
+import { sentryDsn, siteConfig, siteEnv } from '../config';
+import { DEFAULT_LOCALE, LOCALES, localePath, t, type Locale } from '../i18n';
+
+interface Props {
+  locale: Locale;
+  /** The page's address without a language prefix, for example "/privacy/". */
+  path: string;
+  title: string;
+  description: string;
+  /** False for pages that exist in one language only (the 404 and test pages). */
+  translated?: boolean;
+}
+
+const { locale, path, title, description, translated = true } = Astro.props;
+const absolute = (target: Locale) => new URL(localePath(target, path), siteConfig.siteUrl).href;
+const otherLocales = translated ? LOCALES.filter((entry) => entry !== locale) : [];
+const siteName = t(locale, 'site.name');
+const fullTitle = title === siteName ? siteName : `${title} | ${siteName}`;
+---
+
+<!doctype html>
+<html lang={locale} data-site-env={siteEnv} data-sentry-dsn={sentryDsn}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    {translated && (
+      <>
+        <link rel="canonical" href={absolute(locale)} />
+        {LOCALES.map((entry) => (
+          <link rel="alternate" hreflang={entry} href={absolute(entry)} />
+        ))}
+        <link rel="alternate" hreflang="x-default" href={absolute(DEFAULT_LOCALE)} />
+      </>
+    )}
+    {(siteEnv !== 'production' || !translated) && (
+      <meta name="robots" content="noindex, nofollow" />
+    )}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">
+      {t(locale, 'nav.skip')}
+    </a>
+    <header class="site-header">
+      <a class="site-header__name" href={localePath(locale, '/')}>
+        {siteName}
+      </a>
+    </header>
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <nav aria-label={t(locale, 'footer.navLabel')}>
+        <ul>
+          <li>
+            <a href={localePath(locale, '/privacy/')}>{t(locale, 'footer.privacy')}</a>
+          </li>
+          <li>
+            <a href={localePath(locale, '/terms/')}>{t(locale, 'footer.terms')}</a>
+          </li>
+          {otherLocales.map((entry) => (
+            <li>
+              <a href={localePath(entry, path)} lang={entry} hreflang={entry}>
+                {t(entry, 'footer.languageName')}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </footer>
+    <script>
+      import '../scripts/error-tracking';
+    </script>
+  </body>
+</html>

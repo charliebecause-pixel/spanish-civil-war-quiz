@@ -1,0 +1,64 @@
+{
+  "siteUrl": "https://staging.quiz.example",
+  "securityContact": "security@quiz.example",
+  "analytics": { "cloudflareWebAnalytics": false },
+  "ads": {
+    "enabled": true,
+    "mode": "placeholder",
+    "networks": [
+      {
+        "partnerId": "example-ads",
+        "adsTxtDomain": "ads.example",
+        "publisherId": "pub-0000000000000000",
+        "relationship": "DIRECT",
+        "certificationAuthorityId": "fake0000000000000"
+      }
+    ],
+    "slots": {
+      "sidebar": { "size": "300x250", "slotId": "0000000000" }
+    }
+  },
+  "affiliates": [
+    {
+      "slug": "example-book",
+      "partnerId": "example-affiliate",
+      "url": "https://shop.example/books/a-short-history",
+      "params": { "ref": "quiz-fake", "utm_source": "quiz" }
+    }
+  ],
+  "partners": [
+    {
+      "id": "cloudflare",
+      "name": "Cloudflare",
+      "role": "hosting",
+      "policyUrl": "https://www.cloudflare.com/privacypolicy/",
+      "cookies": [],
+      "purpose": {
+        "en": "Hosts and delivers the site.",
+        "es": "Aloja y entrega el sitio."
+      }
+    },
+    {
+      "id": "example-ads",
+      "name": "Example Ad Network (fake)",
+      "role": "advertising",
+      "policyUrl": "https://ads.example/privacy",
+      "cookies": ["example_ad_id"],
+      "purpose": {
+        "en": "Fake ad network used to test the ad slot and the privacy policy. It does not exist.",
+        "es": "Red publicitaria ficticia para probar el espacio publicitario y la política de privacidad. No existe."
+      }
+    },
+    {
+      "id": "example-affiliate",
+      "name": "Example Bookshop (fake)",
+      "role": "affiliate",
+      "policyUrl": "https://shop.example/privacy",
+      "cookies": [],
+      "purpose": {
+        "en": "Fake affiliate programme used to test paid links. It does not exist.",
+        "es": "Programa de afiliación ficticio para probar los enlaces patrocinados. No existe."
+      }
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+# Findings the secret scan (gitleaks) should skip. Each line is the fingerprint
+# gitleaks prints for one finding: commit:file:rule:line.
+#
+# Add a line only for a value that is known not to be a secret, and say why.
+# A real secret is never ignored: rotate it and remove it instead.
+
+# A made-up Stripe-style test key in an older commit of the error-report
+# scrubbing tests. Checked on 2026-11-16: never a real key. The test now builds
+# the value at run time, so new commits do not contain it.
+b70d9fcff76700bb4b07bf101a3b5e2ace8ff104:tests/unit/security.test.ts:generic-api-key:103

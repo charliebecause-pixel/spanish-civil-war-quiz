@@ -1,0 +1,97 @@
+---
+// The only way an ad may be put on a page. It reserves the ad's full size
+// before anything loads, so an ad can never push the page around.
+//
+// Rules for where this may be used are in CLAUDE.md ("Ads and affiliate
+// links"): never beside buttons or menus, never on error or legal pages.
+import { siteConfig } from '../config';
+import { t, type Locale } from '../i18n';
+
+interface Props {
+  /** A slot name from `ads.slots` in the site config, for example "sidebar". */
+  name: string;
+  locale: Locale;
+}
+
+const { name, locale } = Astro.props;
+const { ads } = siteConfig;
+const slot = ads.slots[name];
+const network = ads.networks[0];
+
+if (ads.enabled && !slot) {
+  throw new Error(`Ad slot "${name}" is not defined under ads.slots in the site config.`);
+}
+const live = ads.mode === 'live' && network !== undefined;
+---
+
+{ads.enabled && slot && (
+  <aside
+    class="ad-slot"
+    data-ad-slot-name={name}
+    data-size={slot.size}
+    aria-label={t(locale, 'ads.label')}
+  >
+    <p class="ad-slot__label">{t(locale, 'ads.label')}</p>
+    {live ? (
+      <ins
+        class="adsbygoogle ad-slot__frame"
+        data-ad-client={`ca-${network.publisherId}`}
+        data-ad-slot={slot.slotId}
+      />
+    ) : (
+      <div class="ad-slot__frame ad-slot__frame--placeholder" data-testid="ad-placeholder">
+        {t(locale, 'ads.placeholder')}
+      </div>
+    )}
+  </aside>
+)}
+
+<script>
+  import '../scripts/ads';
+</script>
+
+<style>
+  .ad-slot {
+    margin: 0;
+  }
+
+  .ad-slot__label {
+    margin: 0 0 0.25rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  .ad-slot__frame {
+    display: block;
+    overflow: hidden;
+  }
+
+  /* One rule per size in AD_SIZES (src/config/schema.ts). */
+  .ad-slot[data-size='300x250'] .ad-slot__frame {
+    width: 300px;
+    height: 250px;
+  }
+
+  .ad-slot[data-size='300x600'] .ad-slot__frame {
+    width: 300px;
+    height: 600px;
+  }
+
+  .ad-slot[data-size='160x600'] .ad-slot__frame {
+    width: 160px;
+    height: 600px;
+  }
+
+  .ad-slot__frame--placeholder {
+    display: grid;
+    place-items: center;
+    padding: 1rem;
+    box-sizing: border-box;
+    border: 2px dashed var(--color-border);
+    color: var(--color-muted);
+    font-size: 0.875rem;
+    text-align: center;
+  }
+</style>

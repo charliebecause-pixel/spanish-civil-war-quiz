@@ -1,0 +1,146 @@
+---
+// The quiz: an intro, one question and two possible results. Every screen is
+// in the HTML from the start, so all of its text comes from src/i18n. The
+// script shows one screen at a time and never sends or stores the answer.
+import { t, type Locale } from '../i18n';
+import { ANSWERS, VERDICT } from '../lib/quiz';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+---
+
+<div class="quiz" data-quiz>
+  <section class="quiz__screen" data-quiz-screen="intro">
+    <h1 tabindex="-1" data-quiz-heading>
+      {t(locale, 'home.heading')}
+    </h1>
+    <p class="quiz__actions">
+      <!-- Disabled until the script is running, so it can never be a dead button. -->
+      <button class="button" type="button" data-quiz-action="start" disabled>
+        {t(locale, 'quiz.start')}
+      </button>
+    </p>
+    <p class="quiz__load-error">{t(locale, 'quiz.loadError')}</p>
+  </section>
+
+  <section class="quiz__screen" data-quiz-screen="question" hidden>
+    <h1 class="quiz__number" tabindex="-1" data-quiz-heading>
+      {t(locale, 'quiz.question.number')}
+    </h1>
+    <p class="quiz__question" id="quiz-question">
+      {t(locale, 'quiz.question.text')}
+    </p>
+    <div class="quiz__answers" role="group" aria-labelledby="quiz-question">
+      {ANSWERS.map((answer) => (
+        <button class="button" type="button" data-quiz-action="answer" data-quiz-answer={answer}>
+          {t(locale, `quiz.answer.${answer}`)}
+        </button>
+      ))}
+    </div>
+  </section>
+
+  {ANSWERS.map((answer) => (
+    <section
+      class="quiz__screen"
+      data-quiz-screen="result"
+      data-quiz-verdict={VERDICT[answer]}
+      hidden
+    >
+      <h1 class="quiz__verdict" tabindex="-1" data-quiz-heading>
+        {t(locale, `quiz.verdict.${VERDICT[answer]}`)}
+      </h1>
+      <p class="quiz__actions">
+        <button class="button" type="button" data-quiz-action="restart">
+          {t(locale, 'quiz.restart')}
+        </button>
+      </p>
+    </section>
+  ))}
+</div>
+
+<script>
+  import '../scripts/quiz';
+</script>
+
+<style>
+  .quiz {
+    container-type: inline-size;
+    text-align: center;
+  }
+
+  .quiz__screen {
+    padding-top: clamp(1rem, 6vh, 4rem);
+  }
+
+  /* "Question #1" in big bold letters. */
+  .quiz__number {
+    font-size: clamp(2.25rem, 9vw, 4rem);
+    font-weight: 700;
+  }
+
+  .quiz__question {
+    max-width: 38rem;
+    margin: 0 auto 2rem;
+    font-size: 1.25rem;
+    text-wrap: pretty;
+  }
+
+  .quiz__answers {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .quiz__answers .button {
+    min-width: 12rem;
+  }
+
+  .quiz__actions {
+    margin: 2rem 0 0;
+  }
+
+  /*
+   * Big lettering that always fits: sized from the width of the quiz itself.
+   * The first size is for browsers without container units.
+   */
+  .quiz__verdict {
+    margin: 0;
+    font-size: clamp(1.75rem, 8vw, 5rem);
+    font-size: clamp(1.75rem, 9cqi, 6.5rem);
+    line-height: 1.05;
+    overflow-wrap: anywhere;
+  }
+
+  /*
+   * If the script has not started after four seconds, say so and say what to
+   * do. With JavaScript switched off, say it straight away.
+   */
+  .quiz__load-error {
+    display: none;
+    max-width: 30rem;
+    margin: 1.5rem auto 0;
+  }
+
+  .quiz:not([data-quiz-ready]) .quiz__load-error {
+    display: block;
+    visibility: hidden;
+    animation: quiz-show-load-error 0s linear 4s forwards;
+  }
+
+  @keyframes quiz-show-load-error {
+    to {
+      visibility: visible;
+    }
+  }
+
+  @media (scripting: none) {
+    .quiz:not([data-quiz-ready]) .quiz__load-error {
+      visibility: visible;
+      animation: none;
+    }
+  }
+</style>

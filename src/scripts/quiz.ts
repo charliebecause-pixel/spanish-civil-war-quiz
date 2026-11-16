@@ -3,6 +3,10 @@
 
 import { isAnswer, QuizSession, VERDICT, type QuizEvent, type QuizState } from '../lib/quiz';
 
+// How long a newly shown screen ignores presses on its buttons. Long enough to
+// swallow the second tap of a double tap, too short for anyone to notice.
+const HOLD_MS = 350;
+
 function eventFor(button: HTMLButtonElement): QuizEvent | null {
   const action = button.dataset['quizAction'];
   if (action === 'start' || action === 'restart') return { type: action };
@@ -23,8 +27,25 @@ function startQuiz(root: HTMLElement): void {
     crypto.randomUUID(),
   );
 
-  const show = (state: QuizState, moveFocus: boolean): void => {
+  const buttons = [...root.querySelectorAll<HTMLButtonElement>('button[data-quiz-action]')];
+  let holdTimer: number | undefined;
+
+  // Without this, a double tap on Start could also press whichever answer
+  // appears under the finger, before the visitor has seen the question.
+  // `aria-disabled` is used rather than `disabled` so the buttons stay
+  // reachable by keyboard during the hold.
+  const holdButtons = (): void => {
+    for (const button of buttons) button.setAttribute('aria-disabled', 'true');
+    window.clearTimeout(holdTimer);
+    holdTimer = window.setTimeout(() => {
+      for (const button of buttons) button.removeAttribute('aria-disabled');
+    }, HOLD_MS);
+  };
+
+  /** @param arrived True when the visitor has just moved to this screen. */
+  const show = (state: QuizState, arrived: boolean): void => {
     const verdict = state.screen === 'result' ? VERDICT[state.answer] : undefined;
+    if (arrived) holdButtons();
 
     for (const screen of root.querySelectorAll<HTMLElement>('[data-quiz-screen]')) {
       const visible =
@@ -32,7 +53,7 @@ function startQuiz(root: HTMLElement): void {
       screen.hidden = !visible;
       // Moving focus to the new screen's heading makes screen readers announce
       // it and lets keyboard users carry on from there.
-      if (visible && moveFocus) screen.querySelector<HTMLElement>('[data-quiz-heading]')?.focus();
+      if (visible && arrived) screen.querySelector<HTMLElement>('[data-quiz-heading]')?.focus();
     }
 
     // The whole page changes colour with the verdict (src/styles/global.css).
@@ -41,16 +62,17 @@ function startQuiz(root: HTMLElement): void {
   };
 
   root.addEventListener('click', (event) => {
-    // The second click of a double-click lands on whatever the first click
-    // put under the pointer. Ignoring it stops a double-click on Start from
-    // also choosing an answer the visitor never saw.
+    // A second guard for mouse users: the second click of a double-click
+    // reports a click count of 2, however slowly it was made.
     if (event.detail > 1) return;
 
     const button =
       event.target instanceof Element
         ? event.target.closest<HTMLButtonElement>('button[data-quiz-action]')
         : null;
-    const quizEvent = button ? eventFor(button) : null;
+    if (!button || button.getAttribute('aria-disabled') === 'true') return;
+
+    const quizEvent = eventFor(button);
     if (quizEvent && session.dispatch(quizEvent)) show(session.state, true);
   });
 
@@ -64,9 +86,7 @@ function startQuiz(root: HTMLElement): void {
   window.addEventListener('hashchange', () => session.restamp());
 
   show(session.state, false);
-  for (const button of root.querySelectorAll<HTMLButtonElement>('button[data-quiz-action]')) {
-    button.disabled = false;
-  }
+  for (const button of buttons) button.disabled = false;
   root.dataset['quizReady'] = '';
 }
 

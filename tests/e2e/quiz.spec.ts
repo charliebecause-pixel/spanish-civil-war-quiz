@@ -73,11 +73,6 @@ async function boxOf(locator: Locator) {
   return box;
 }
 
-type Box = Awaited<ReturnType<typeof boxOf>>;
-
-const overlap = (a: Box, b: Box) =>
-  a.x < b.x + b.width && b.x < a.x + a.width && a.y < b.y + b.height && b.y < a.y + a.height;
-
 const sidewaysOverflow = (page: Page) =>
   page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
 
@@ -207,28 +202,6 @@ for (const { name, path, text } of LANGUAGES) {
       await quiz.nationalists.click();
       await expect(quiz.fascist).toBeVisible();
       expect(await violations(), 'fascist result').toEqual([]);
-    });
-
-    test('no button appears where the button just pressed was', async ({ page }) => {
-      // A double tap must not be able to press a button on the next screen.
-      const quiz = quizIn(page, text);
-      await page.goto(path);
-      const start = await boxOf(quiz.start);
-      await quiz.start.click();
-
-      const answers = [await boxOf(quiz.republicans), await boxOf(quiz.nationalists)];
-      for (const answer of answers)
-        expect(overlap(start, answer), 'Start and an answer').toBe(false);
-
-      await quiz.republicans.click();
-      const afterCommunist = await boxOf(quiz.restart);
-      await page.goBack();
-      await quiz.nationalists.click();
-      const afterFascist = await boxOf(quiz.restart);
-      for (const answer of answers) {
-        expect(overlap(answer, afterCommunist), 'an answer and Take quiz again').toBe(false);
-        expect(overlap(answer, afterFascist), 'an answer and Take quiz again').toBe(false);
-      }
     });
 
     test('every screen fits a 320 pixel wide screen without scrolling sideways', async ({
@@ -436,6 +409,8 @@ test.describe('awkward clicking', () => {
     const quiz = quizIn(page, en);
     await page.goto('/');
     await quiz.start.click();
+    // Wait out the hold on new buttons, so this tests the click count alone.
+    await expect(quiz.republicans).not.toHaveAttribute('aria-disabled', 'true');
     const click = (count: number) =>
       quiz.republicans.evaluate(
         (button, detail) =>
@@ -449,6 +424,65 @@ test.describe('awkward clicking', () => {
 
     await click(1);
     await expect(quiz.communist).toBeVisible();
+  });
+
+  test('a press that arrives the instant a new screen appears is ignored', async ({ page }) => {
+    // The second tap of a double tap lands on whatever the first tap put there.
+    const quiz = quizIn(page, en);
+    await page.goto('/');
+    await expect(quiz.start).toBeEnabled();
+
+    // Both presses happen in the same instant, which no person or test tool
+    // could time by hand.
+    const held = await page.evaluate(() => {
+      const press = (selector: string) => {
+        const button = document.querySelector<HTMLButtonElement>(selector);
+        if (!button) throw new Error(`No button matches ${selector}`);
+        button.dispatchEvent(new MouseEvent('click', { bubbles: true, detail: 1 }));
+        return button;
+      };
+      press('[data-quiz-action="start"]');
+      const answer = press('[data-quiz-answer="republicans"]');
+      answer.focus();
+      return {
+        marked: answer.getAttribute('aria-disabled'),
+        stillFocusable: document.activeElement === answer,
+      };
+    });
+
+    await expect(quiz.question).toBeVisible();
+    await expect(quiz.communist).toBeHidden();
+    // Held, but still reachable by keyboard.
+    expect(held).toEqual({ marked: 'true', stillFocusable: true });
+
+    // A moment later the same button works.
+    await expect(quiz.republicans).not.toHaveAttribute('aria-disabled', 'true');
+    await quiz.republicans.click();
+    await expect(quiz.communist).toBeVisible();
+  });
+
+  test('the same hold protects the result from an instant press on "Take quiz again"', async ({
+    page,
+  }) => {
+    const quiz = quizIn(page, en);
+    await page.goto('/');
+    await quiz.start.click();
+    await expect(quiz.nationalists).not.toHaveAttribute('aria-disabled', 'true');
+
+    await page.evaluate(() => {
+      for (const selector of [
+        '[data-quiz-answer="nationalists"]',
+        '[data-quiz-action="restart"]',
+      ]) {
+        // The restart buttons are still hidden when this runs; press them all.
+        for (const button of document.querySelectorAll(selector)) {
+          button.dispatchEvent(new MouseEvent('click', { bubbles: true, detail: 1 }));
+        }
+      }
+    });
+
+    await expect(quiz.fascist).toBeVisible();
+    await expect(quiz.intro).toBeHidden();
   });
 });
 
@@ -470,11 +504,14 @@ test.describe('keyboard only', () => {
     await expect(quiz.republicans).toBeFocused();
     await page.keyboard.press('Tab');
     await expect(quiz.nationalists).toBeFocused();
+    // New buttons ignore presses for a moment; nobody reads a question that fast.
+    await expect(quiz.nationalists).not.toHaveAttribute('aria-disabled', 'true');
     await page.keyboard.press('Space');
 
     await expect(quiz.fascist).toBeFocused();
     await page.keyboard.press('Tab');
     await expect(quiz.restart).toBeFocused();
+    await expect(quiz.restart).not.toHaveAttribute('aria-disabled', 'true');
     await page.keyboard.press('Enter');
 
     await expect(quiz.intro).toBeFocused();

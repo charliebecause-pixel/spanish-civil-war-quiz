@@ -16,10 +16,65 @@
   background: var(--color-background);
 }
 
+/*
+ * A quiz result recolours the whole page: red for one verdict, brown for the
+ * other, with yellow lettering. Every pairing here keeps at least 4.5:1 contrast.
+ */
+html[data-quiz-verdict] {
+  --color-text: #ffdd00;
+  --color-muted: #ffe866;
+  --color-link: #ffdd00;
+  --color-border: #ffdd00;
+  --color-focus: #ffffff;
+}
+
+html[data-quiz-verdict='communist'] {
+  --color-background: #be0000;
+  --color-surface: #8f0000;
+}
+
+html[data-quiz-verdict='fascist'] {
+  --color-background: #5b3a1e;
+  --color-surface: #3f2814;
+}
+
 *,
 *::before,
 *::after {
   box-sizing: border-box;
+}
+
+/* `hidden` must win over any display rule a component sets. */
+[hidden] {
+  display: none !important;
+}
+
+.button {
+  min-height: 3rem;
+  padding: 0.75rem 1.75rem;
+  font: inherit;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--color-background);
+  background: var(--color-text);
+  border: 2px solid var(--color-text);
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+.button:hover:not(:disabled) {
+  color: var(--color-text);
+  background: var(--color-background);
+}
+
+.button:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+.button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
 body {

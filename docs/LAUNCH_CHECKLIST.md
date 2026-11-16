@@ -151,7 +151,8 @@ Generated from the project brief on November 15, 2026. 129 items apply to this a
   - How to check: PostHog, Amplitude or Mixpanel. Confirm one event per key step arrives in the dashboard.
 ### Testing and accessibility
 
-- [ ] Core business logic has unit tests written against the requirements, not just the current behavior.
+- [x] Core business logic has unit tests written against the requirements, not just the current behavior.
+  - Evidence (2026-11-16): tests/unit/quiz.test.ts has 40 tests that restate the brief (which answer gives which verdict, an answer ends the quiz, "take quiz again" resets, the answer is never stored). Six deliberate breakages of the code were each caught by a failing test; the list is in docs/pull-requests/0002-quiz-flow.md. That was a hand-run spot check, not a mutation-testing tool.
   - How to check: Review tests against the spec and run mutation testing (Stryker, mutmut).
 - [ ] End-to-end tests cover signup, checkout and other money flows, and run in CI.
   - How to check: Write Playwright or Cypress tests and run them against staging.
@@ -168,13 +169,15 @@ Generated from the project brief on November 15, 2026. 129 items apply to this a
 
 - [ ] Pages load acceptably on a slow connection.
   - How to check: Chrome DevTools network throttling (Slow 4G) and Lighthouse.
-- [ ] Every screen has empty, loading and error states, with error messages a user can act on.
+- [x] Every screen has empty, loading and error states, with error messages a user can act on.
+  - Evidence (2026-11-16): no screen loads data, so there is nothing that can come back empty. While the quiz script is loading, Start is disabled; if it never starts, or JavaScript is off, the page says what to do (tests under "when the quiz cannot start" in tests/e2e/quiz.spec.ts). An unknown address gets a 404 page with a way home in both languages (tests/e2e/pages.spec.ts). Any new screen must keep this true.
   - How to check: Visit each screen with no data, a slow network and a forced API error.
 - [ ] Forms keep what was typed when one field fails validation.
   - How to check: Break one field in a long form and submit it.
 - [ ] Destructive actions have undo, a confirmation step or a trash.
   - How to check: List the destructive actions and check each one.
-- [ ] The browser back button behaves as expected in every flow.
+- [x] The browser back button behaves as expected in every flow.
+  - Evidence (2026-11-16): tests under "the Back and Forward buttons" in tests/e2e/quiz.spec.ts press Back and Forward at every step of the quiz, including after a restart and after leaving for another page. "the back button returns to the previous page" in tests/e2e/pages.spec.ts covers the legal pages. How it works is in docs/decisions/0006.
   - How to check: Press back at each step of the key flows.
 ### Code health and ownership
 

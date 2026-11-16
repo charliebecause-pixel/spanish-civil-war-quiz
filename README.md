@@ -55,10 +55,13 @@ CI runs the same checks on every pull request, plus a secret scan and a dependen
 config/            Site settings. site.production.json is the real site;
                    site.fake.json is made-up data for everything else.
 functions/go/      The /go/<slug> redirect that every paid link goes through.
-src/components/    AdSlot and AffiliateLink: the only way to place an ad or a paid link.
+src/components/    Quiz: the three screens. AdSlot and AffiliateLink: the only way to
+                   place an ad or a paid link.
 src/config/        Reads and validates the settings; decides which environment a build is for.
 src/i18n/          All text shown to visitors, in English and Spanish.
-src/lib/           Small tested functions: ads.txt, security headers, redirects, error-report scrubbing.
+src/lib/           Small tested functions: the quiz's rules, ads.txt, security headers,
+                   redirects, error-report scrubbing.
+src/scripts/       The little code that runs in the visitor's browser.
 src/pages/         One file per page. [...locale] pages are built once per language.
 tests/unit/        Fast tests for the functions above.
 tests/e2e/         Browser tests against the built site.

@@ -1,7 +1,12 @@
 # Spanish Civil War Political Ideology Quiz: architecture
 
-Status: **proposed, awaiting approval from Solrac.** Nothing below is built yet.
+Status: **approved as written by Solrac on November 16, 2026.**
 Written November 15, 2026. Target launch December 1, 2026.
+
+Two details changed while building the foundations. Each has a decision record:
+
+- Review is enforced by the branch rule and by Solrac being the only person who can merge, not by a CODEOWNERS file, because GitHub does not let anyone approve their own pull request ([decision 0004](decisions/0004-single-owner-review.md)).
+- The project lives at `C:\dev\spanish-civil-war-quiz`, outside OneDrive (decision 8 in section 11).
 
 ## 1. What we are actually building
 

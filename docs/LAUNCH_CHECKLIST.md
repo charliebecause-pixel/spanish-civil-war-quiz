@@ -6,9 +6,11 @@ Generated from the project brief on November 15, 2026. 129 items apply to this a
 
 ### How the AI builds your app
 
-- [ ] The repo has a short CLAUDE.md or AGENTS.md (about 100 lines) listing the commands to build, test and run the app, the conventions agents must follow, and links to deeper docs.
+- [x] The repo has a short CLAUDE.md or AGENTS.md (about 100 lines) listing the commands to build, test and run the app, the conventions agents must follow, and links to deeper docs.
+  - Evidence (2026-11-16): CLAUDE.md is under 100 lines, its Commands section is filled in, and it links to docs/ARCHITECTURE.md and docs/decisions/. Every command in it was run in docs/pull-requests/0001-foundations.md.
   - How to check: OpenAI's Codex team kept AGENTS.md to about 100 lines that work as a table of contents. Claude Code's docs say to cut any line whose removal wouldn't cause mistakes, because long files get ignored.
-- [ ] Coding agents have checks they can run themselves (tests, type check, lint, build, a browser run-through), and work isn't accepted until the agent shows their output.
+- [x] Coding agents have checks they can run themselves (tests, type check, lint, build, a browser run-through), and work isn't accepted until the agent shows their output.
+  - Evidence (2026-11-16): `corepack pnpm check` runs lint, formatting, type check, 69 unit tests, the build and 77 browser tests in one command. Its full output is in docs/pull-requests/0001-foundations.md, and CLAUDE.md requires the same in every pull request.
   - How to check: Claude Code's docs list this first: without a check the agent can run, you become the verification loop. Look for test output or screenshots in each pull request, not the agent's summary.
 - [ ] Coding agents work against a development database and environment, never production, and hold no production write credentials.
   - How to check: In July 2025 Replit's agent deleted a live production database during a code freeze; Replit then separated development and production databases automatically. List every credential your agents can reach.
@@ -78,7 +80,8 @@ Generated from the project brief on November 15, 2026. 129 items apply to this a
   - How to check: Check each dependency's registry page for age, downloads and repository. Use Socket.dev and commit lockfiles.
 - [ ] Dependency vulnerability scanning runs automatically.
   - How to check: Turn on Dependabot or Renovate, and run npm audit, OSV-Scanner or Snyk in CI.
-- [ ] CI workflows pin third-party actions to full commit hashes, and secrets are available only to the jobs that need them.
+- [x] CI workflows pin third-party actions to full commit hashes, and secrets are available only to the jobs that need them.
+  - Evidence (2026-11-16): all seven `uses:` lines in .github/workflows/ci.yml end in a 40-character commit hash. The workflow's default permission is `contents: read`. The only secret used is the built-in `GITHUB_TOKEN`, passed to the secret-scan job alone.
   - How to check: In March 2025 the tj-actions/changed-files action was compromised and exposed CI secrets in build logs. Search your workflows for “uses:” lines that end in a version tag instead of a commit hash.
 - [ ] Dependency installs are hardened: lockfiles are committed and CI installs from them, new package versions wait a few days before you adopt them, and registry and GitHub accounts use phishing-resistant MFA.
   - How to check: The Shai-Hulud npm worm (from September 2025) spread through install scripts that stole developer tokens. Set pnpm minimumReleaseAge, npm min-release-age, or a Renovate or Dependabot cooldown.
@@ -154,7 +157,8 @@ Generated from the project brief on November 15, 2026. 129 items apply to this a
   - How to check: Write Playwright or Cypress tests and run them against staging.
 - [ ] The app has been load-tested at two to three times expected peak before a big launch. _(raised because you expect fast growth)_
   - How to check: k6, Artillery or Locust. Include AI calls and background jobs in the test.
-- [ ] Development and tests use generated data, never raw production copies.
+- [x] Development and tests use generated data, never raw production copies.
+  - Evidence (2026-11-16): everything outside production reads config/site.fake.json. The unit test "the fake config contains only made-up addresses and IDs" (tests/unit/config.test.ts) fails if a real domain or publisher ID is put in it. The site stores no visitor data, so there is no production data to copy.
   - How to check: Seed with Faker, and anonymize any copy you can't avoid.
 ### Integrations and API
 

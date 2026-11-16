@@ -211,6 +211,33 @@ for (const { name, path, text } of LANGUAGES) {
       expect(await violations(), 'fascist result').toEqual([]);
     });
 
+    test('the question offers a Wikipedia link in the same language, in a new tab', async ({
+      page,
+    }) => {
+      const quiz = quizIn(page, text);
+      await page.goto(path);
+      await quiz.start.click();
+
+      const link = page.getByRole('link', {
+        name: `${text['quiz.moreInfo.link']} ${text['quiz.moreInfo.where']}`,
+        exact: true,
+      });
+      await expect(link).toBeVisible();
+      await expect(link).toHaveAttribute('href', text['quiz.moreInfo.url']);
+      await expect(link).toHaveAttribute('target', '_blank');
+      await expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+      expect(new URL(text['quiz.moreInfo.url']).hostname).toBe(
+        `${name === 'English' ? 'en' : 'es'}.wikipedia.org`,
+      );
+
+      // It sits below the answers, not between them.
+      const linkBox = await boxOf(link);
+      for (const answer of [quiz.republicans, quiz.nationalists]) {
+        const box = await boxOf(answer);
+        expect(linkBox.y).toBeGreaterThan(box.y + box.height);
+      }
+    });
+
     test('every screen fits a 320 pixel wide screen without scrolling sideways', async ({
       page,
     }) => {

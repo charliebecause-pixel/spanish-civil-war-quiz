@@ -21,7 +21,7 @@ The usual ways to make Back work put the state somewhere visible: a separate add
 
 Two smaller rules live in the same code:
 
-- The second click of a double-click is ignored, so double-clicking Start cannot also pick an answer the visitor never saw. A browser test also checks that no button appears where the previous screen's button was, for double taps on phones.
+- A newly shown screen ignores presses on its buttons for a third of a second, so the second tap of a double tap cannot press a button the visitor has not seen yet. The buttons stay reachable by keyboard during that hold. For mouse users, the second click of a double-click is also ignored by its click count, however slow it is.
 - The Start button is disabled until the script is running. If the script has not started after four seconds, or JavaScript is switched off, the page says so and says what to do.
 
 ## Reason

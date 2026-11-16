@@ -7,6 +7,11 @@ import { isAnswer, QuizSession, VERDICT, type QuizEvent, type QuizState } from '
 // swallow the second tap of a double tap, too short for anyone to notice.
 const HOLD_MS = 350;
 
+// The death toll starts rolling once the emblem has landed, and takes about
+// two seconds to reach its figure.
+const COUNT_DELAY_MS = 500;
+const COUNT_MS = 2000;
+
 function eventFor(button: HTMLButtonElement): QuizEvent | null {
   const action = button.dataset['quizAction'];
   if (action === 'start' || action === 'restart') return { type: action };
@@ -42,6 +47,38 @@ function startQuiz(root: HTMLElement): void {
     }, HOLD_MS);
   };
 
+  const numberFormat = new Intl.NumberFormat(document.documentElement.lang || undefined);
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let countFrame: number | undefined;
+
+  /**
+   * Rolls a result's death toll up from zero. The final figure is already in
+   * the HTML; this only animates towards it, and leaves it alone when the
+   * visitor has asked for reduced motion or did not just arrive.
+   */
+  const rollCount = (screen: HTMLElement, arrived: boolean): void => {
+    if (countFrame !== undefined) cancelAnimationFrame(countFrame);
+    countFrame = undefined;
+    const counter = screen.querySelector<HTMLElement>('[data-quiz-count]');
+    const target = Number(counter?.dataset['quizCount']);
+    if (!counter || !Number.isFinite(target)) return;
+
+    counter.textContent = numberFormat.format(target);
+    if (!arrived || reducedMotion.matches) return;
+
+    counter.textContent = numberFormat.format(0);
+    const start = performance.now() + COUNT_DELAY_MS;
+    const tick = (now: number): void => {
+      const progress = Math.min(1, Math.max(0, (now - start) / COUNT_MS));
+      const eased = 1 - (1 - progress) ** 3;
+      counter.textContent = numberFormat.format(
+        progress === 1 ? target : Math.round((target * eased) / 1000) * 1000,
+      );
+      countFrame = progress < 1 ? requestAnimationFrame(tick) : undefined;
+    };
+    countFrame = requestAnimationFrame(tick);
+  };
+
   /** @param arrived True when the visitor has just moved to this screen. */
   const show = (state: QuizState, arrived: boolean): void => {
     const verdict = state.screen === 'result' ? VERDICT[state.answer] : undefined;
@@ -51,6 +88,7 @@ function startQuiz(root: HTMLElement): void {
       const visible =
         screen.dataset['quizScreen'] === state.screen && screen.dataset['quizVerdict'] === verdict;
       screen.hidden = !visible;
+      if (visible && verdict) rollCount(screen, arrived);
       // The stylesheet animates a screen only when it has just been arrived at.
       screen.toggleAttribute('data-quiz-arrived', visible && arrived);
       // Moving focus to the new screen's heading makes screen readers announce

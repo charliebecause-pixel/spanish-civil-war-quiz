@@ -5,6 +5,7 @@
 //
 // How it looks and moves is described in docs/specs/visual-design.md.
 import { t, type Locale, type MessageKey } from '../i18n';
+import { DEATH_TOLL } from '../lib/death-tolls';
 import { ANSWERS, VERDICT } from '../lib/quiz';
 import Emblem from './Emblem.astro';
 
@@ -84,11 +85,28 @@ const facts: { value: number; label: MessageKey }[] = [
       <div class="quiz__emblem">
         <Emblem verdict={VERDICT[answer]} label={t(locale, `quiz.emblem.${VERDICT[answer]}`)} />
       </div>
+      <div class="quiz__toll">
+        {/* The final figure is in the HTML, so it is right without the script,
+            with reduced motion, and for screen readers (which read the
+            sentence below instead of the rolling digits). */}
+        <p class="quiz__toll-number" aria-hidden="true">
+          <span data-quiz-count={DEATH_TOLL[VERDICT[answer]]}>
+            {number.format(DEATH_TOLL[VERDICT[answer]])}
+          </span>
+        </p>
+        <p class="quiz__toll-label">
+          <span class="visually-hidden">
+            {t(locale, 'quiz.toll.over', { number: number.format(DEATH_TOLL[VERDICT[answer]]) })}
+          </span>{' '}
+          {t(locale, `quiz.toll.${VERDICT[answer]}.label`)}
+        </p>
+      </div>
       <p class="quiz__actions">
         <button class="button" type="button" data-quiz-action="restart">
           {t(locale, 'quiz.restart')}
         </button>
       </p>
+      <p class="quiz__toll-note">{t(locale, `quiz.toll.${VERDICT[answer]}.note`)}</p>
     </section>
   ))}
 </div>
@@ -252,8 +270,8 @@ const facts: { value: number; label: MessageKey }[] = [
 
   /* A huge emblem, but never so big that the button below leaves the screen. */
   .quiz__emblem {
-    width: min(70vw, 38vh);
-    width: min(70cqi, 38svh);
+    width: min(62vw, 30vh);
+    width: min(62cqi, 30svh);
     aspect-ratio: 1;
     margin: clamp(0.75rem, 2.5vh, 1.5rem) auto 0;
   }
@@ -263,6 +281,44 @@ const facts: { value: number; label: MessageKey }[] = [
     width: 100%;
     height: 100%;
     filter: drop-shadow(0.3rem 0.3rem 0 rgb(0 0 0 / 0.3));
+  }
+
+  /* The death toll: rolls up from zero when a result arrives (src/scripts/quiz.ts). */
+  .quiz__toll {
+    margin-top: clamp(0.5rem, 2vh, 1rem);
+  }
+
+  .quiz__toll-number {
+    margin: 0;
+    font-family: var(--font-poster);
+    font-size: clamp(2rem, min(10cqi, 7svh), 4rem);
+    font-synthesis: none;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    text-shadow: 0.05em 0.05em 0 rgb(0 0 0 / 0.35);
+  }
+
+  /* "20,000,000+": the plus says "over" without a word to translate. */
+  .quiz__toll-number span::after {
+    content: '+';
+  }
+
+  .quiz__toll-label {
+    margin: 0.25rem 0 0;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .quiz__toll-note {
+    max-width: 36rem;
+    margin: 1.5rem auto 0;
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    color: var(--color-muted);
+    text-wrap: pretty;
   }
 
   /* ---------- Motion ---------- */

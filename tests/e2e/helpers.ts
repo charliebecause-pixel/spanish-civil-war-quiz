@@ -1,6 +1,18 @@
 import type { Page } from '@playwright/test';
 
 /**
+ * Waits until every animation on the page has finished. Screens fade, slam
+ * and pop into place, so anything that measures or inspects them waits first.
+ */
+export function settle(page: Page): Promise<void> {
+  return page.evaluate(() =>
+    Promise.all(
+      document.getAnimations().map((animation) => animation.finished.catch(() => undefined)),
+    ).then(() => undefined),
+  );
+}
+
+/**
  * Records anything that should never happen on a page: script errors, console
  * errors (a blocked Content-Security-Policy request shows up as one), and
  * requests to any other site.

@@ -2,7 +2,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Locator, type Page } from '@playwright/test';
 import en from '../../src/i18n/en.json' with { type: 'json' };
 import es from '../../src/i18n/es.json' with { type: 'json' };
-import { watchForProblems } from './helpers';
+import { settle, watchForProblems } from './helpers';
 
 // Written from the project brief:
 //   - the page reads "60 second political ideology test" with a "Start" button
@@ -68,13 +68,18 @@ async function fontOf(locator: Locator): Promise<{ size: number; weight: number 
 }
 
 async function boxOf(locator: Locator) {
+  await settle(locator.page());
   const box = await locator.boundingBox();
   if (!box) throw new Error('Element has no box; is it visible?');
   return box;
 }
 
-const sidewaysOverflow = (page: Page) =>
-  page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+async function sidewaysOverflow(page: Page): Promise<number> {
+  await settle(page);
+  return page.evaluate(
+    () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+  );
+}
 
 const historyLength = (page: Page) => page.evaluate(() => history.length);
 
@@ -184,10 +189,12 @@ for (const { name, path, text } of LANGUAGES) {
 
     test('the question and both results pass automated accessibility checks', async ({ page }) => {
       const quiz = quizIn(page, text);
-      const violations = async () =>
-        (await new AxeBuilder({ page }).withTags(WCAG).analyze()).violations.map(
+      const violations = async () => {
+        await settle(page);
+        return (await new AxeBuilder({ page }).withTags(WCAG).analyze()).violations.map(
           (violation) => `${violation.id}: ${violation.help}`,
         );
+      };
 
       await page.goto(path);
       await quiz.start.click();

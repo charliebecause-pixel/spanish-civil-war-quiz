@@ -1,0 +1,24 @@
+# pnpm settings for this project. See docs/decisions/0003-dependency-hardening.md.
+
+# Wait 3 days (in minutes) before adopting any newly published package version.
+minimumReleaseAge: 4320
+
+# Fail the install if a package's publishing trust level drops between releases.
+trustPolicy: no-downgrade
+
+# Install scripts from dependencies are blocked unless approved here.
+# Both packages below ship prebuilt binaries and work without their scripts.
+allowBuilds:
+  esbuild: false
+  workerd: false
+
+# Forces a patched version of a package that a dependency still asks for in a
+# vulnerable range. Remove an entry once the dependency itself has moved on.
+overrides:
+  # GHSA-g3hv-75wg-m249 (moderate). ESLint moves to minimatch 11 in 10.15.0;
+  # delete this line when ESLint is 10.15.0 or newer.
+  'minimatch@<11.0.1': ^11.0.5
+
+# Lets scripts in package.json set environment variables the same way on
+# Windows, macOS and Linux (VAR=value command).
+shellEmulator: true

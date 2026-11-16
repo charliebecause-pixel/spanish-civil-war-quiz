@@ -18,6 +18,7 @@ const { locale } = Astro.props;
   path="/"
   title={t(locale, 'site.name')}
   description={t(locale, 'site.description')}
+  wide
 >
   <Quiz locale={locale} />
 </Base>

@@ -1,0 +1,70 @@
+---
+// Lists every outside company from the site config. Because the privacy policy
+// prints this table, a partner cannot be added without the policy naming it.
+import { siteConfig } from '../config';
+import { t, type Locale } from '../i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+---
+
+<div class="table-scroll" role="region" aria-label={t(locale, 'partners.caption')} tabindex="0">
+  <table>
+    <caption class="visually-hidden">{t(locale, 'partners.caption')}</caption>
+    <thead>
+      <tr>
+        <th scope="col">{t(locale, 'partners.column.name')}</th>
+        <th scope="col">{t(locale, 'partners.column.role')}</th>
+        <th scope="col">{t(locale, 'partners.column.purpose')}</th>
+        <th scope="col">{t(locale, 'partners.column.cookies')}</th>
+        <th scope="col">{t(locale, 'partners.column.policy')}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {siteConfig.partners.map((partner) => (
+        <tr data-partner={partner.id}>
+          <th scope="row">{partner.name}</th>
+          <td>{t(locale, `partners.role.${partner.role}`)}</td>
+          <td>{partner.purpose[locale]}</td>
+          <td>
+            {partner.cookies.length > 0
+              ? partner.cookies.join(', ')
+              : t(locale, 'partners.cookies.none')}
+          </td>
+          <td>
+            <a href={partner.policyUrl} rel="noopener">
+              {t(locale, 'partners.policyLink', { name: partner.name })}
+            </a>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
+<style>
+  .table-scroll {
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9375rem;
+  }
+
+  th,
+  td {
+    padding: 0.625rem 0.75rem;
+    border: 1px solid var(--color-border);
+    text-align: left;
+    vertical-align: top;
+  }
+
+  thead th {
+    background: var(--color-surface);
+  }
+</style>

@@ -1,0 +1,28 @@
+---
+// Cloudflare Pages serves this for any address that does not exist. The
+// visitor's language is unknown here, so the message is shown in every one.
+import { LOCALES, localePath, t } from '../i18n';
+import Base from '../layouts/Base.astro';
+---
+
+<Base
+  locale="en"
+  path="/"
+  title={t('en', 'notFound.title')}
+  description={t('en', 'notFound.body')}
+  translated={false}
+>
+  {LOCALES.map((locale, index) => (
+    <section lang={locale}>
+      {index === 0 ? (
+        <h1>{t(locale, 'notFound.title')}</h1>
+      ) : (
+        <h2>{t(locale, 'notFound.title')}</h2>
+      )}
+      <p>{t(locale, 'notFound.body')}</p>
+      <p>
+        <a href={localePath(locale, '/')}>{t(locale, 'notFound.home')}</a>
+      </p>
+    </section>
+  ))}
+</Base>

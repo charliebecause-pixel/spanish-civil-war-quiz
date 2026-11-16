@@ -1,0 +1,43 @@
+---
+import { siteConfig } from '../config';
+import { fill, formatDate, t, type Locale } from '../i18n';
+import { LEGAL, type LegalContent } from '../i18n/legal';
+import Base from '../layouts/Base.astro';
+import PartnerTable from './PartnerTable.astro';
+
+interface Props {
+  locale: Locale;
+  document: keyof LegalContent;
+  path: string;
+}
+
+const { locale, document, path } = Astro.props;
+const doc = LEGAL[locale][document];
+const text = (value: string) => fill(value, { contact: siteConfig.securityContact });
+---
+
+<Base locale={locale} path={path} title={doc.title} description={doc.description}>
+  <article class="prose">
+    <h1>{doc.title}</h1>
+    <p class="muted">{t(locale, 'legal.updated', { date: formatDate(locale, doc.updated) })}</p>
+    {doc.intro.map((paragraph) => (
+      <p>{text(paragraph)}</p>
+    ))}
+    {doc.sections.map((section) => (
+      <section>
+        <h2>{section.heading}</h2>
+        {section.paragraphs.map((paragraph) => (
+          <p>{text(paragraph)}</p>
+        ))}
+        {section.items && (
+          <ul>
+            {section.items.map((item) => (
+              <li>{text(item)}</li>
+            ))}
+          </ul>
+        )}
+        {section.id === 'partners' && <PartnerTable locale={locale} />}
+      </section>
+    ))}
+  </article>
+</Base>

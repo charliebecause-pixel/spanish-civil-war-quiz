@@ -51,6 +51,8 @@ function startQuiz(root: HTMLElement): void {
       const visible =
         screen.dataset['quizScreen'] === state.screen && screen.dataset['quizVerdict'] === verdict;
       screen.hidden = !visible;
+      // The stylesheet animates a screen only when it has just been arrived at.
+      screen.toggleAttribute('data-quiz-arrived', visible && arrived);
       // Moving focus to the new screen's heading makes screen readers announce
       // it and lets keyboard users carry on from there.
       if (visible && arrived) screen.querySelector<HTMLElement>('[data-quiz-heading]')?.focus();
@@ -88,6 +90,14 @@ function startQuiz(root: HTMLElement): void {
   show(session.state, false);
   for (const button of buttons) button.disabled = false;
   root.dataset['quizReady'] = '';
+
+  // Hover and press transitions are allowed only once the page has been drawn
+  // with its real styles; see the note beside them in src/styles/global.css.
+  requestAnimationFrame(() =>
+    requestAnimationFrame(() => {
+      root.dataset['quizSettled'] = '';
+    }),
+  );
 }
 
 const root = document.querySelector<HTMLElement>('[data-quiz]');

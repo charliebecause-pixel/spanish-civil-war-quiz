@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import Logo from '../components/Logo.astro';
 import { sentryDsn, siteConfig, siteEnv } from '../config';
 import { DEFAULT_LOCALE, LOCALES, localePath, t, type Locale } from '../i18n';
 
@@ -11,9 +12,11 @@ interface Props {
   description: string;
   /** False for pages that exist in one language only (the 404 and test pages). */
   translated?: boolean;
+  /** True for pages that want more room than a column of reading text. */
+  wide?: boolean;
 }
 
-const { locale, path, title, description, translated = true } = Astro.props;
+const { locale, path, title, description, translated = true, wide = false } = Astro.props;
 const absolute = (target: Locale) => new URL(localePath(target, path), siteConfig.siteUrl).href;
 const otherLocales = translated ? LOCALES.filter((entry) => entry !== locale) : [];
 const siteName = t(locale, 'site.name');
@@ -46,15 +49,20 @@ const fullTitle = title === siteName ? siteName : `${title} | ${siteName}`;
       {t(locale, 'nav.skip')}
     </a>
     <header class="site-header">
-      <a class="site-header__name" href={localePath(locale, '/')}>
-        {siteName}
-      </a>
+      <div class="site-header__inner">
+        <a class="site-header__name" href={localePath(locale, '/')}>
+          <Logo />
+          <span>{siteName}</span>
+        </a>
+      </div>
     </header>
     <main id="main" tabindex="-1">
-      <slot />
+      <div class:list={['page', { 'page--wide': wide }]}>
+        <slot />
+      </div>
     </main>
     <footer class="site-footer">
-      <nav aria-label={t(locale, 'footer.navLabel')}>
+      <nav class="site-footer__inner" aria-label={t(locale, 'footer.navLabel')}>
         <ul>
           <li>
             <a href={localePath(locale, '/privacy/')}>{t(locale, 'footer.privacy')}</a>

@@ -1,0 +1,46 @@
+---
+// The two result emblems. Both were drawn for this project (see
+// docs/specs/visual-design.md) and take the colour of the text around them.
+import type { Verdict } from '../lib/quiz';
+
+interface Props {
+  verdict: Verdict;
+  /** Read out by screen readers in place of the picture. */
+  label: string;
+}
+
+const { verdict, label } = Astro.props;
+---
+
+{verdict === 'communist' ? (
+  <svg class="emblem" viewBox="30 28 200 200" role="img" aria-label={label} fill="currentColor">
+    {/* Sickle: a blade that tapers from the heel to a point, and its handle. */}
+    <path d="M116.5 41.2A78 78 0 1 1 88.7 184.1L101 164.4A65 65 0 1 0 116.5 41.2Z" />
+    <path
+      d="M96 173 66 203"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="19"
+      stroke-linecap="round"
+    />
+    {/* Hammer: handle, then head. */}
+    <path d="M86 76 188 200" fill="none" stroke="currentColor" stroke-width="16" />
+    <path d="M52.4 85.6 84.8 58.8 106.9 51 114.5 60.2 102.6 80.4 70.2 107.2Z" />
+  </svg>
+) : (
+  <svg class="emblem" viewBox="23 0 240 240" role="img" aria-label={label} fill="currentColor">
+    {/* Fasces: a bundle of seven rods, three straps, and an axe through it. */}
+    <rect x="74" y="14" width="11" height="212" rx="5.5" />
+    <rect x="87.5" y="14" width="11" height="212" rx="5.5" />
+    <rect x="101" y="14" width="11" height="212" rx="5.5" />
+    <rect x="114.5" y="14" width="11" height="212" rx="5.5" />
+    <rect x="128" y="14" width="11" height="212" rx="5.5" />
+    <rect x="141.5" y="14" width="11" height="212" rx="5.5" />
+    <rect x="155" y="14" width="11" height="212" rx="5.5" />
+    <rect x="69" y="46" width="102" height="13" rx="2.5" />
+    <rect x="69" y="113.5" width="102" height="13" rx="2.5" />
+    <rect x="69" y="181" width="102" height="13" rx="2.5" />
+    <path d="M166 68C187 68 205 60 217 43Q242 89 217 135C205 118 187 110 166 110Z" />
+    <rect x="57" y="73" width="17" height="32" rx="2.5" />
+  </svg>
+)}

@@ -15,7 +15,9 @@ Status: written November 16, 2026, before the work; built the same day. Feature 
 Two looks, and the joke is the jump between them.
 
 1. **The straight face.** The intro and the question look like a careful, slightly self-important online assessment: paper-white page, navy ink, serif type, a small chart-like logo, faint graph-paper lines, a few confident facts above the Start button.
-2. **The punchline.** The result throws all of that away at once: the whole page turns red or brown, the verdict slams in as huge yellow poster lettering, a huge emblem follows it, and a moment later the "Take quiz again" button pops up.
+2. **The punchline.** The result throws all of that away at once: the whole page turns red or brown, the verdict slams in as huge yellow poster lettering, a huge emblem follows it, a worldwide death toll rolls up from zero beneath it, and a moment later the "Take quiz again" button pops up.
+
+The joke is the false dilemma: picking a side in the Spanish Civil War gets you labelled, at once and to the extreme, as a global communist or fascist, the way political opponents label each other today. The death toll is the label's full weight, stated plainly and from sources (`docs/decisions/0008`).
 
 ## Rules this design keeps
 
@@ -24,8 +26,8 @@ Two looks, and the joke is the jump between them.
 - **Not a copy of any real site.** The logo, layout and colours are our own. Nothing imitates a specific quiz site or a real institution.
 - **Every claim in the copy is literally true.** The page may sound grand ("a definitive result with a single question"), but it invents no user counts, testimonials, endorsements or studies.
 - **Readable by everyone.** Text keeps at least 4.5:1 contrast on every screen, including the result screens. Each emblem has a text label for screen readers.
-- **Safe motion.** The colour change is one cut, never a flicker. No animation runs longer than about a second, and nothing loops. With "reduce motion" switched on in the visitor's device, there is no animation at all and the result simply appears.
-- **The button is never out of reach.** On a phone and on a laptop, the verdict, the emblem and "Take quiz again" fit on one screen without scrolling.
+- **Safe motion.** The colour change is one cut, never a flicker. No animation runs longer than about a second, and nothing loops. The one exception is the death-toll counter, which counts up for two seconds and then stops. With "reduce motion" switched on in the visitor's device, there is no animation at all and the result simply appears.
+- **The button is never out of reach.** On a phone and on a laptop, the verdict, the emblem, the death toll and "Take quiz again" fit on one screen without scrolling. Only the small-print sources below the button may need a scroll.
 - **All text stays in `src/i18n`,** in English and Spanish.
 
 ## Screens
@@ -36,7 +38,7 @@ Two looks, and the joke is the jump between them.
 
 **Question.** A small "Step 1 of 1" label with a full progress bar, "Question #1" in big bold letters, the question, and the two answers as large buttons. Well below the answers, a small "Need to know more about this question?" link opens the Spanish Civil War article on Wikipedia in the visitor's language, in a new tab so the quiz is not lost. It sends Wikipedia no referrer, and nothing is loaded from Wikipedia unless the visitor clicks.
 
-**Result.** Verdict lettering, then the emblem, then the button. Faint rays behind them, like a poster.
+**Result.** Verdict lettering, then the emblem, then the death toll ("20,000,000+" or "11,000,000+" in poster figures, with a one-line label such as "people killed worldwide by communist regimes"), then the button, then a small-print note giving the range of estimates and naming the sources. Faint rays behind them, like a poster. Screen readers hear the toll as one sentence ("Over 20,000,000 people killed worldwide by communist regimes") instead of the rolling digits.
 
 ## Motion
 
@@ -46,6 +48,7 @@ Two looks, and the joke is the jump between them.
 | Page turns red or brown | Instant cut | 0 s |
 | Verdict | Slams in from oversized, with one short shake of the screen | 0.4 s |
 | Emblem | Spins and grows into place | 0.6 s, starting just after the verdict |
+| Death toll | Counts up from zero to its figure, then stops. With "reduce motion" on, or without the script, the figure is simply there | 2 s, starting half a second after the emblem |
 | "Take quiz again" | Pops up | about a second after the verdict |
 | Buttons | Lift slightly on hover, press down on click | 0.1 s |
 

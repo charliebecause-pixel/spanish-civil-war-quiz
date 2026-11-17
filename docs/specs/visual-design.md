@@ -34,7 +34,7 @@ Two looks, and the joke is the jump between them.
 
 **Intro.** A small label ("Political self-assessment"), the title, one sentence of confident copy, three facts (1 question, 60 seconds, 0 sign-ups), the Start button, and a small-print line saying the answer never leaves the browser.
 
-**Question.** A small "Step 1 of 1" label with a full progress bar, "Question #1" in big bold letters, the question, and the two answers as large buttons.
+**Question.** A small "Step 1 of 1" label with a full progress bar, "Question #1" in big bold letters, the question, and the two answers as large buttons. Well below the answers, a small "Need to know more about this question?" link opens the Spanish Civil War article on Wikipedia in the visitor's language, in a new tab so the quiz is not lost. It sends Wikipedia no referrer, and nothing is loaded from Wikipedia unless the visitor clicks.
 
 **Result.** Verdict lettering, then the emblem, then the button. Faint rays behind them, like a poster.
 

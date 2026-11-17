@@ -11,6 +11,8 @@ for (const path of [
   '/privacy/',
   '/es/privacy/',
   '/terms/',
+  '/credits/',
+  '/es/credits/',
   '/dev/components/',
   '/this-page-does-not-exist/',
 ]) {

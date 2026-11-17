@@ -2,6 +2,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Locator, type Page } from '@playwright/test';
 import en from '../../src/i18n/en.json' with { type: 'json' };
 import es from '../../src/i18n/es.json' with { type: 'json' };
+import { QUIZ_IMAGES } from '../../src/lib/quiz-images';
 import { settle, watchForProblems } from './helpers';
 
 // Written from the project brief:
@@ -353,7 +354,18 @@ test.describe('the answer stays private', () => {
     const requests: string[] = [];
     page.on('request', (request) => requests.push(request.url()));
 
+    // Start fetches the images behind the question and both results, all at
+    // once, before any answer is chosen (src/components/QuizBackdrop.astro).
+    // After that, choosing an answer fetches nothing at all.
     await quiz.start.click();
+    await expect.poll(() => new Set(requests).size).toBe(QUIZ_IMAGES.length);
+    await page.waitForLoadState('networkidle');
+    expect(
+      requests.every((url) => new URL(url).pathname.startsWith('/images/quiz/')),
+      requests.join('\n'),
+    ).toBe(true);
+    requests.length = 0;
+
     await quiz.republicans.click();
     await expect(quiz.communist).toBeVisible();
     await page.goBack();

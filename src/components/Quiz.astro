@@ -63,6 +63,12 @@ const facts: { value: number; label: MessageKey }[] = [
         </button>
       ))}
     </div>
+    <p class="quiz__more">
+      <a href={t(locale, 'quiz.moreInfo.url')} target="_blank" rel="noopener noreferrer">
+        {t(locale, 'quiz.moreInfo.link')}{' '}
+        <span class="quiz__more-where">{t(locale, 'quiz.moreInfo.where')}</span>
+      </a>
+    </p>
   </section>
 
   {ANSWERS.map((answer) => (
@@ -205,6 +211,22 @@ const facts: { value: number; label: MessageKey }[] = [
 
   .quiz__actions {
     margin: clamp(1rem, 3vh, 2rem) 0 0;
+  }
+
+  /* Well below the answers, so nobody aiming for an answer hits it. */
+  .quiz__more {
+    margin: 2.5rem 0 0;
+    font-family: var(--font-sans);
+    font-size: 0.9375rem;
+  }
+
+  .quiz__more a {
+    display: inline-block;
+    padding: 0.5rem 0;
+  }
+
+  .quiz__more-where {
+    color: var(--color-muted);
   }
 
   /* ---------- Result: the punchline ---------- */

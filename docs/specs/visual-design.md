@@ -38,7 +38,7 @@ The joke is the false dilemma: picking a side in the Spanish Civil War gets you 
 
 **Question.** A small "Step 1 of 1" label with a full progress bar, "Question #1" in big bold letters, the question, and the two answers as large buttons. Well below the answers, a small "Need to know more about this question?" link opens the Spanish Civil War article on Wikipedia in the visitor's language, in a new tab so the quiz is not lost. It sends Wikipedia no referrer, and nothing is loaded from Wikipedia unless the visitor clicks.
 
-**Result.** Verdict lettering, then the emblem, then the death toll ("20,000,000+" or "11,000,000+" in poster figures, with a one-line label such as "people killed worldwide by communist regimes"), then the button, then a small-print note giving the range of estimates and naming the sources. Faint rays behind them, like a poster. Screen readers hear the toll as one sentence ("Over 20,000,000 people killed worldwide by communist regimes") instead of the rolling digits.
+**Result.** Verdict lettering, then the emblem, then the death toll ("60,000,000+" or "11,000,000+" in poster figures, with a one-line label such as "people killed worldwide by communist regimes"), then the button, then a small-print note giving the range of estimates and naming the sources. Faint rays behind them, like a poster. Screen readers hear the toll as one sentence ("Over 60,000,000 people killed worldwide by communist regimes") instead of the rolling digits.
 
 ## Motion
 

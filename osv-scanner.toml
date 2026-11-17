@@ -1,0 +1,17 @@
+# Advisories the dependency scan (OSV-Scanner, see .github/workflows/ci.yml)
+# accepts for a limited time. Each entry says why it cannot harm the site and
+# expires, so the scan fails again and someone has to look again.
+#
+# Only accept an advisory that cannot be reached through the site. Prefer an
+# update or an override in pnpm-workspace.yaml whenever a fixed version exists.
+
+[[IgnoredVulns]]
+# picomatch through 4.0.7: slow matching (ReDoS) for crafted glob patterns.
+# No fixed version exists yet (https://github.com/micromatch/picomatch/pull/194
+# is still open on 2026-11-17). picomatch is used only by the build and editing
+# tools (Astro, Vite, ESLint), on file patterns written in this repository. It
+# is not in the built site or the /go/ function, and no visitor input ever
+# reaches it. Accepted on 2026-11-17 until a fix ships or 30 days pass.
+id = "GHSA-fc5q-39xc-vjpf"
+ignoreUntil = 2026-12-17
+reason = "Build-time only; no visitor input reaches picomatch; no fixed version yet. See osv-scanner.toml."

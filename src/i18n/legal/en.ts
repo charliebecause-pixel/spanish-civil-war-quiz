@@ -2,6 +2,67 @@ import type { LegalContent } from './types';
 
 // `{contact}` is replaced with the contact address from the site config.
 export const legalEn: LegalContent = {
+  about: {
+    title: 'About this site',
+    description:
+      'What this site is, what it makes fun of, and where its figures and pictures come from.',
+    updated: '2026-11-19',
+    intro: [
+      'The 60 Second Political Ideology Test is a parody of online political quizzes. It is a joke, and this page is where it says so plainly.',
+    ],
+    sections: [
+      {
+        heading: 'What it makes fun of',
+        paragraphs: [
+          'Online political quizzes ask dozens of questions and then place you precisely on a political map. This one claims the same precision from a single question about a war that ended in 1939, and then gives you the most extreme label it can find.',
+        ],
+      },
+      {
+        heading: 'The joke',
+        paragraphs: [
+          'The question is a false choice. Pick the Republicans and you are told you are a communist; pick the Nationalists and you are told you are a fascist, at once and in giant letters. It is how political opponents often label each other today: one opinion, and you are sorted into the worst camp on that side.',
+          'Your result says nothing about you. Not everyone on the Republican side was a communist, and not everyone on the Nationalist side was a fascist.',
+        ],
+      },
+      {
+        heading: 'The Spanish Civil War, briefly',
+        paragraphs: [
+          "In July 1936, army officers rose against the elected government of Spain's Second Republic. The war that followed lasted until April 1939.",
+        ],
+        items: [
+          'The Republicans were a coalition of liberal republicans, socialists, communists, anarchists, and Basque and Catalan nationalists, joined by volunteers from abroad in the International Brigades. The Soviet Union and Mexico sent them aid.',
+          "The Nationalists were the rebel army, soon led by General Francisco Franco, with the Falange (Spain's fascist party), monarchists and much of the Catholic right. Fascist Italy and Nazi Germany sent them troops, aircraft and weapons.",
+          'Both sides killed tens of thousands of civilians behind their own lines. Estimates of all the dead vary; about 500,000 is a figure often given.',
+          'The Nationalists won. Franco ruled Spain as a dictator until his death in 1975.',
+        ],
+      },
+      {
+        heading: 'Where the death tolls come from',
+        paragraphs: [
+          'The figures on the results count people killed by communist regimes and by fascist and Nazi regimes worldwide, not by the two sides in Spain.',
+          'For communist regimes, scholars’ estimates run from about 21 million (Benjamin Valentino, Final Solutions, 2005) to about 100 million (Stéphane Courtois and others, The Black Book of Communism, 1997). The site says “over 60 million”, a figure inside that range.',
+          'For fascist and Nazi regimes, the site says “over 11 million”: the 6 million Jews murdered in the Holocaust and about 5.9 million others murdered by Nazi Germany and its allies, as counted by the United States Holocaust Memorial Museum. It does not count the Second World War itself, which killed 70 to 85 million people.',
+        ],
+      },
+      {
+        heading: 'The pictures',
+        paragraphs: [
+          'The posters behind the question and the photos behind the results are historical images from Wikimedia Commons. The image credits page, linked at the bottom of every page, names each one with its author, licence and source.',
+          'The hammer and sickle and the fasces on the results were drawn for this site. The site shows no Nazi emblems and no victims’ bodies.',
+        ],
+      },
+      {
+        heading: 'Your answer',
+        paragraphs: [
+          'Nothing you click is sent anywhere. There are no accounts and no sign-ups. The privacy policy has the details.',
+        ],
+      },
+      {
+        heading: 'Contact',
+        paragraphs: ['Write to {contact}.'],
+      },
+    ],
+  },
   privacy: {
     title: 'Privacy policy',
     description: 'What happens to information when you use this site.',

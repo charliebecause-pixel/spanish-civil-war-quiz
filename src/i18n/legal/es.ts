@@ -2,6 +2,66 @@ import type { LegalContent } from './types';
 
 // `{contact}` se sustituye por la dirección de contacto de la configuración del sitio.
 export const legalEs: LegalContent = {
+  about: {
+    title: 'Acerca de este sitio',
+    description: 'Qué es este sitio, de qué se burla y de dónde vienen sus cifras y sus imágenes.',
+    updated: '2026-11-19',
+    intro: [
+      'El Test de ideología política en 60 segundos es una parodia de los tests políticos de internet. Es una broma, y esta página es donde lo dice claramente.',
+    ],
+    sections: [
+      {
+        heading: 'De qué se burla',
+        paragraphs: [
+          'Los tests políticos de internet hacen decenas de preguntas y luego te sitúan con precisión en un mapa político. Este presume de la misma precisión con una sola pregunta sobre una guerra que terminó en 1939, y después te da la etiqueta más extrema que encuentra.',
+        ],
+      },
+      {
+        heading: 'La broma',
+        paragraphs: [
+          'La pregunta es una falsa disyuntiva. Si eliges a los republicanos, te dice que eres comunista; si eliges a los nacionales, que eres fascista, al instante y con letras enormes. Es como se etiquetan hoy a menudo los adversarios políticos: una opinión, y te colocan en el peor bando de ese lado.',
+          'Tu resultado no dice nada de ti. No todos los del bando republicano eran comunistas, ni todos los del bando nacional eran fascistas.',
+        ],
+      },
+      {
+        heading: 'La Guerra Civil española, en pocas palabras',
+        paragraphs: [
+          'En julio de 1936, un grupo de militares se sublevó contra el Gobierno elegido de la Segunda República. La guerra que siguió duró hasta abril de 1939.',
+        ],
+        items: [
+          'Los republicanos eran una coalición de republicanos liberales, socialistas, comunistas, anarquistas y nacionalistas vascos y catalanes, a la que se unieron voluntarios extranjeros en las Brigadas Internacionales. La Unión Soviética y México les enviaron ayuda.',
+          'Los nacionales eran el ejército sublevado, pronto dirigido por el general Francisco Franco, junto con la Falange (el partido fascista español), los monárquicos y gran parte de la derecha católica. La Italia fascista y la Alemania nazi les enviaron tropas, aviones y armas.',
+          'Los dos bandos mataron a decenas de miles de civiles en su propia retaguardia. Las estimaciones del total de muertos varían; a menudo se da la cifra de unos 500.000.',
+          'Ganaron los nacionales. Franco gobernó España como dictador hasta su muerte en 1975.',
+        ],
+      },
+      {
+        heading: 'De dónde vienen las cifras de muertos',
+        paragraphs: [
+          'Las cifras de los resultados cuentan a las personas muertas en todo el mundo a manos de regímenes comunistas y de regímenes fascistas y nazis, no a manos de los dos bandos en España.',
+          'Para los regímenes comunistas, las estimaciones de los historiadores van de unos 21 millones (Benjamin Valentino, Final Solutions, 2005) a unos 100 millones (Stéphane Courtois y otros, El libro negro del comunismo, 1997). El sitio dice «más de 60 millones», una cifra dentro de ese intervalo.',
+          'Para los regímenes fascistas y nazis, el sitio dice «más de 11 millones»: los 6 millones de judíos asesinados en el Holocausto y unos 5,9 millones de personas más asesinadas por la Alemania nazi y sus aliados, según el Museo Conmemorativo del Holocausto de Estados Unidos. No cuenta la Segunda Guerra Mundial en sí, que causó entre 70 y 85 millones de muertos.',
+        ],
+      },
+      {
+        heading: 'Las imágenes',
+        paragraphs: [
+          'Los carteles detrás de la pregunta y las fotos detrás de los resultados son imágenes históricas de Wikimedia Commons. La página de créditos de las imágenes, enlazada al pie de todas las páginas, indica de cada una su autor, su licencia y su origen.',
+          'La hoz y el martillo y las fasces de los resultados se dibujaron para este sitio. El sitio no muestra emblemas nazis ni cuerpos de víctimas.',
+        ],
+      },
+      {
+        heading: 'Tu respuesta',
+        paragraphs: [
+          'Nada de lo que pulsas se envía a ninguna parte. No hay cuentas ni registros. La política de privacidad tiene los detalles.',
+        ],
+      },
+      {
+        heading: 'Contacto',
+        paragraphs: ['Escribe a {contact}.'],
+      },
+    ],
+  },
   privacy: {
     title: 'Política de privacidad',
     description: 'Qué ocurre con la información cuando usas este sitio.',

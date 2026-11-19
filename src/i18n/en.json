@@ -1,6 +1,7 @@
 {
   "site.name": "60 Second Political Ideology Test",
   "site.description": "A quick questionnaire that matches your personal ideological leanings.",
+  "social.imageAlt": "The 60 Second Political Ideology Test: one question, 60 seconds, no sign-ups, and two answers to choose from, Republicans or Nationalists.",
   "nav.skip": "Skip to main content",
   "home.heading": "60 second political ideology test",
   "home.overline": "Political self-assessment",

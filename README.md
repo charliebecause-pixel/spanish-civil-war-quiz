@@ -46,6 +46,7 @@ There is no data to seed and no `.env` file to create. Everything outside produc
 | Dependency audit                                | `corepack pnpm audit --audit-level=moderate`             |
 | Serve the built site as Cloudflare would        | `corepack pnpm preview`, then open http://127.0.0.1:8788 |
 | Install the test browser (first time only)      | `corepack pnpm exec playwright install chromium`         |
+| Redraw the link-preview images (build first)    | `corepack pnpm social`                                   |
 
 CI runs the same checks on every pull request, plus a secret scan and a dependency scan. A pull request cannot merge until they pass.
 

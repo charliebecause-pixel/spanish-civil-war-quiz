@@ -3,6 +3,7 @@ import '../styles/global.css';
 import Logo from '../components/Logo.astro';
 import { sentryDsn, siteConfig, siteEnv } from '../config';
 import { DEFAULT_LOCALE, LOCALES, localePath, t, type Locale } from '../i18n';
+import { OG_LOCALE, SOCIAL_IMAGE, socialImagePath } from '../lib/social-image';
 
 interface Props {
   locale: Locale;
@@ -21,6 +22,9 @@ const absolute = (target: Locale) => new URL(localePath(target, path), siteConfi
 const otherLocales = translated ? LOCALES.filter((entry) => entry !== locale) : [];
 const siteName = t(locale, 'site.name');
 const fullTitle = title === siteName ? siteName : `${title} | ${siteName}`;
+// What link previews show (docs/decisions/0010-social-preview-image.md).
+const socialImage = new URL(socialImagePath(locale), siteConfig.siteUrl).href;
+const socialImageAlt = t(locale, 'social.imageAlt');
 ---
 
 <!doctype html>
@@ -43,6 +47,22 @@ const fullTitle = title === siteName ? siteName : `${title} | ${siteName}`;
       <meta name="robots" content="noindex, nofollow" />
     )}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    {translated && <meta property="og:url" content={absolute(locale)} />}
+    <meta property="og:locale" content={OG_LOCALE[locale]} />
+    {otherLocales.map((entry) => (
+      <meta property="og:locale:alternate" content={OG_LOCALE[entry]} />
+    ))}
+    <meta property="og:image" content={socialImage} />
+    <meta property="og:image:type" content={SOCIAL_IMAGE.type} />
+    <meta property="og:image:width" content={String(SOCIAL_IMAGE.width)} />
+    <meta property="og:image:height" content={String(SOCIAL_IMAGE.height)} />
+    <meta property="og:image:alt" content={socialImageAlt} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image:alt" content={socialImageAlt} />
   </head>
   <body>
     <a class="skip-link" href="#main">

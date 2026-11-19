@@ -4,24 +4,9 @@ import { describe, expect, it } from 'vitest';
 import en from '../../src/i18n/en.json' with { type: 'json' };
 import es from '../../src/i18n/es.json' with { type: 'json' };
 import { LICENCE_URL, QUIZ_IMAGES, imagePath, imagesIn } from '../../src/lib/quiz-images';
+import { jpegSize } from './jpeg';
 
 const FOLDER = join(import.meta.dirname, '../../public/images/quiz');
-
-/** Reads a JPEG's width and height from its start-of-frame marker. */
-function jpegSize(bytes: Buffer): { width: number; height: number } {
-  expect(bytes.readUInt16BE(0)).toBe(0xffd8);
-  let offset = 2;
-  while (offset < bytes.length) {
-    const marker = bytes.readUInt16BE(offset);
-    const length = bytes.readUInt16BE(offset + 2);
-    // SOF0 to SOF15, except DHT (C4), JPG (C8) and DAC (CC).
-    if (marker >= 0xffc0 && marker <= 0xffcf && ![0xffc4, 0xffc8, 0xffcc].includes(marker)) {
-      return { height: bytes.readUInt16BE(offset + 5), width: bytes.readUInt16BE(offset + 7) };
-    }
-    offset += 2 + length;
-  }
-  throw new Error('no start-of-frame marker');
-}
 
 describe('the quiz images', () => {
   it('lists every file in public/images/quiz, and nothing that is not there', () => {

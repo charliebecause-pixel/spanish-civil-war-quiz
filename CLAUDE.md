@@ -19,6 +19,7 @@ Keep these current. Use `corepack pnpm`, which needs no setup; plain `pnpm` work
 - Everything above in one go: `corepack pnpm check`
 - Dependency audit: `corepack pnpm audit --audit-level=moderate`
 - Preview the built site with security headers and `/go/` redirects: `corepack pnpm preview`, then open http://127.0.0.1:8788
+- Redraw the link-preview images after changing the home page's title, facts or answer labels: `corepack pnpm build`, then `corepack pnpm social` (docs/decisions/0010).
 
 The secret scan (gitleaks) and the dependency scan (OSV-Scanner) run in CI on every pull request; see .github/workflows/ci.yml.
 

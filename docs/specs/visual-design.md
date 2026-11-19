@@ -56,7 +56,7 @@ The joke is the false dilemma: picking a side in the Spanish Civil War gets you 
 
 ## Not in this feature
 
-- A social-media preview image and share tags.
+- A social-media preview image and share tags. Added later; see `docs/decisions/0010-social-preview-image.md`.
 - The about/parody page.
 - The sidebar ad layout. Ads are off for the first release.
 

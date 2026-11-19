@@ -1,0 +1,20 @@
+{
+  "en": {
+    "home.overline": "Political self-assessment",
+    "home.heading": "60 second political ideology test",
+    "home.fact.questions": "question",
+    "home.fact.seconds": "seconds",
+    "home.fact.signups": "sign-ups",
+    "quiz.answer.republicans": "Republicans",
+    "quiz.answer.nationalists": "Nationalists"
+  },
+  "es": {
+    "home.overline": "Autoevaluación política",
+    "home.heading": "Test de ideología política en 60 segundos",
+    "home.fact.questions": "pregunta",
+    "home.fact.seconds": "segundos",
+    "home.fact.signups": "registros",
+    "quiz.answer.republicans": "Republicanos",
+    "quiz.answer.nationalists": "Nacionales"
+  }
+}

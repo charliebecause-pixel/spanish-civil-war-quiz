@@ -51,6 +51,8 @@ test.describe('home page', () => {
 
 test.describe('legal pages', () => {
   for (const [path, heading, lang] of [
+    ['/about/', 'About this site', 'en'],
+    ['/es/about/', 'Acerca de este sitio', 'es'],
     ['/privacy/', 'Privacy policy', 'en'],
     ['/es/privacy/', 'Política de privacidad', 'es'],
     ['/terms/', 'Terms of use', 'en'],
@@ -63,6 +65,17 @@ test.describe('legal pages', () => {
       // The contact placeholder must have been filled in.
       await expect(page.locator('main')).not.toContainText('{contact}');
       await expect(page.locator('main')).toContainText(fakeConfig.securityContact);
+    });
+  }
+
+  for (const [path, link, parody] of [
+    ['/', 'About', 'is a parody of online political quizzes'],
+    ['/es/', 'Acerca de', 'es una parodia de los tests políticos'],
+  ] as const) {
+    test(`the about page is one click from ${path} and says it is a parody`, async ({ page }) => {
+      await page.goto(path);
+      await page.getByRole('contentinfo').getByRole('link', { name: link, exact: true }).click();
+      await expect(page.locator('main')).toContainText(parody);
     });
   }
 
@@ -113,6 +126,8 @@ test.describe('every page is self-contained', () => {
   for (const path of [
     '/',
     '/es/',
+    '/about/',
+    '/es/about/',
     '/privacy/',
     '/es/privacy/',
     '/terms/',

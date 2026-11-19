@@ -8,6 +8,8 @@ const WCAG = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 for (const path of [
   '/',
   '/es/',
+  '/about/',
+  '/es/about/',
   '/privacy/',
   '/es/privacy/',
   '/terms/',

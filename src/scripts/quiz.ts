@@ -96,6 +96,8 @@ function startQuiz(root: HTMLElement): void {
       if (visible && arrived) screen.querySelector<HTMLElement>('[data-quiz-heading]')?.focus();
     }
 
+    // The images behind the quiz follow the screen (src/components/QuizBackdrop.astro).
+    document.documentElement.dataset['quizView'] = state.screen;
     // The whole page changes colour with the verdict (src/styles/global.css).
     if (verdict) document.documentElement.dataset['quizVerdict'] = verdict;
     else delete document.documentElement.dataset['quizVerdict'];

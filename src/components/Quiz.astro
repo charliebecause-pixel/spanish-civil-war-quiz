@@ -8,6 +8,7 @@ import { t, type Locale, type MessageKey } from '../i18n';
 import { DEATH_TOLL } from '../lib/death-tolls';
 import { ANSWERS, VERDICT } from '../lib/quiz';
 import Emblem from './Emblem.astro';
+import QuizBackdrop from './QuizBackdrop.astro';
 
 interface Props {
   locale: Locale;
@@ -22,6 +23,8 @@ const facts: { value: number; label: MessageKey }[] = [
   { value: 0, label: 'home.fact.signups' },
 ];
 ---
+
+<QuizBackdrop />
 
 <div class="quiz" data-quiz>
   <section class="quiz__screen" data-quiz-screen="intro">

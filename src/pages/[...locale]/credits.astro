@@ -1,0 +1,149 @@
+---
+// Where each image behind the quiz comes from. Built from src/lib/quiz-images.ts.
+import { localeStaticPaths, t, type Locale } from '../../i18n';
+import Base from '../../layouts/Base.astro';
+import {
+  LICENCE_URL,
+  QUIZ_IMAGES,
+  imagePath,
+  type ImageSet,
+  type QuizImage,
+} from '../../lib/quiz-images';
+
+export const getStaticPaths = localeStaticPaths;
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const SETS: ImageSet[] = ['question-a', 'question-b', 'communist', 'fascist'];
+const shareAlike = (image: QuizImage) => image.licence !== 'public-domain';
+---
+
+<Base
+  locale={locale}
+  path="/credits/"
+  title={t(locale, 'credits.title')}
+  description={t(locale, 'credits.description')}
+>
+  <article class="prose credits">
+    <h1>{t(locale, 'credits.title')}</h1>
+    <p>{t(locale, 'credits.lead')}</p>
+    {SETS.map((set) => (
+      <section>
+        <h2>{t(locale, `credits.set.${set}`)}</h2>
+        <ul class="credits__list">
+          {QUIZ_IMAGES.filter((image) => image.set === set).map((image) => (
+            <li class="credits__item" data-credit={image.id}>
+              <img
+                class="credits__thumb"
+                src={imagePath(image)}
+                alt=""
+                width={image.width}
+                height={image.height}
+                loading="lazy"
+                decoding="async"
+              />
+              <div>
+                <p class="credits__what">{t(locale, `credits.image.${image.id}`)}</p>
+                <dl class="credits__facts">
+                  <div>
+                    <dt>{t(locale, 'credits.author')}</dt>
+                    <dd>{image.author ?? t(locale, 'credits.authorUnknown')}</dd>
+                  </div>
+                  <div>
+                    <dt>{t(locale, 'credits.licence')}</dt>
+                    <dd>
+                      {LICENCE_URL[image.licence] ? (
+                        <a href={LICENCE_URL[image.licence]} rel="license noopener noreferrer">
+                          {t(locale, `credits.licence.${image.licence}`)}
+                        </a>
+                      ) : (
+                        t(locale, `credits.licence.${image.licence}`)
+                      )}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>{t(locale, 'credits.changes')}</dt>
+                    <dd>
+                      {t(locale, image.grey ? 'credits.changes.grey' : 'credits.changes.shrunk')}
+                      {shareAlike(image) && <>. {t(locale, 'credits.shareAlike')}</>}
+                    </dd>
+                  </div>
+                </dl>
+                <p class="credits__source">
+                  <a href={image.source} rel="noopener noreferrer">
+                    {t(locale, 'credits.source')}
+                  </a>
+                </p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+  </article>
+</Base>
+
+<style>
+  .credits__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .credits__item {
+    display: grid;
+    grid-template-columns: 6rem 1fr;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-top: 1px solid var(--color-rule);
+  }
+
+  .credits__thumb {
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--color-rule);
+  }
+
+  .credits__what {
+    margin: 0 0 0.5rem;
+  }
+
+  .credits__facts {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: 0.9375rem;
+  }
+
+  .credits__facts div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 0.5rem;
+  }
+
+  .credits__facts dt {
+    font-weight: 700;
+  }
+
+  .credits__facts dt::after {
+    content: ':';
+  }
+
+  .credits__facts dd {
+    margin: 0;
+  }
+
+  .credits__source {
+    margin: 0.5rem 0 0;
+    font-family: var(--font-sans);
+    font-size: 0.9375rem;
+  }
+
+  /* Comfortable tap targets on phones (WCAG 2.2, target size). */
+  .credits a {
+    display: inline-block;
+    min-height: 1.5rem;
+  }
+</style>

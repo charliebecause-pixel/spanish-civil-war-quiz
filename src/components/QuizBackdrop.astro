@@ -1,0 +1,158 @@
+---
+// The images behind the quiz: posters behind the question, photos behind each
+// result. See docs/specs/background-images.md.
+//
+// Each set is shown only while its screen is (the quiz script marks the page
+// with data-quiz-view and data-quiz-verdict). The images are lazy, so the home
+// page fetches none. As soon as the question appears, every set is laid out
+// (the ones not on show are invisible), so the browser fetches all of them at
+// once: what the site's server sees is then the same whichever answer is
+// chosen, and the answer still never leaves the browser.
+//
+// They are decoration: screen readers skip them, and the credits page
+// describes each one.
+//
+// Images only ever darken the page: each is multiplied onto the page colour.
+// Text on top therefore keeps at least the contrast it has without them.
+import { imagePath, imagesIn, type ImageSet } from '../lib/quiz-images';
+
+const SETS: { name: string; parts: ImageSet[] }[] = [
+  { name: 'question', parts: ['question-a', 'question-b'] },
+  { name: 'communist', parts: ['communist'] },
+  { name: 'fascist', parts: ['fascist'] },
+];
+---
+
+<div class="backdrop" aria-hidden="true">
+  {SETS.map((set) => (
+    <div class="backdrop__set" data-backdrop={set.name}>
+      {set.parts.map((part) => (
+        <div class="backdrop__part" data-backdrop-part={part}>
+          {imagesIn(part).map((image) => (
+            <div class="backdrop__tile">
+              <img
+                src={imagePath(image)}
+                alt=""
+                width={image.width}
+                height={image.height}
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+  ))}
+</div>
+
+<style>
+  /* Fills the window behind everything; the header and footer sit on top. */
+  .backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .backdrop__set {
+    display: none;
+    position: absolute;
+    inset: 0;
+    visibility: hidden;
+  }
+
+  /* From the question on, every set is laid out, so every image is fetched together. */
+  :global(html[data-quiz-view='question']) .backdrop__set,
+  :global(html[data-quiz-view='result']) .backdrop__set {
+    display: grid;
+  }
+
+  /* Only the set for the screen on show is visible. */
+  :global(html[data-quiz-view='question']) [data-backdrop='question'],
+  :global(html[data-quiz-view='result'][data-quiz-verdict='communist']) [data-backdrop='communist'],
+  :global(html[data-quiz-view='result'][data-quiz-verdict='fascist']) [data-backdrop='fascist'] {
+    visibility: visible;
+  }
+
+  .backdrop__part {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    min-width: 0;
+    min-height: 0;
+  }
+
+  /*
+   * Each tile is the page colour with the image multiplied onto it, so the
+   * image can only darken the page, never lighten it.
+   */
+  .backdrop__tile {
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+    isolation: isolate;
+    background: var(--color-background);
+  }
+
+  .backdrop__tile img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    mix-blend-mode: multiply;
+  }
+
+  /* ---------- The question: faint, blurred posters, one side each ---------- */
+
+  /* Republicans on the left, Nationalists on the right, like the buttons. */
+  [data-backdrop='question'] {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  [data-backdrop='question'] img {
+    opacity: 0.13;
+    filter: blur(2px);
+    /* The blur would otherwise show a pale fringe at each edge. */
+    transform: scale(1.04);
+  }
+
+  /* Where the buttons stack (Republicans above Nationalists), so do the sides. */
+  @media (max-aspect-ratio: 1 / 1) {
+    [data-backdrop='question'] {
+      grid-template-columns: none;
+      grid-template-rows: 1fr 1fr;
+    }
+  }
+
+  /* ---------- The results: grey photos tinted by the red or brown ---------- */
+
+  [data-backdrop='communist'] img,
+  [data-backdrop='fascist'] img {
+    opacity: 0.55;
+  }
+
+  /* In a tall window, the photos stack instead of standing side by side. */
+  @media (max-aspect-ratio: 1 / 1) {
+    [data-backdrop='communist'] .backdrop__part,
+    [data-backdrop='fascist'] .backdrop__part {
+      grid-auto-flow: row;
+      grid-auto-rows: 1fr;
+      grid-auto-columns: auto;
+    }
+  }
+
+  /* Fades in as it loads, but only for visitors who allow motion. */
+  @media (prefers-reduced-motion: no-preference) {
+    .backdrop__set {
+      animation: backdrop-in 400ms ease-out;
+    }
+  }
+
+  @keyframes backdrop-in {
+    from {
+      opacity: 0;
+    }
+  }
+</style>

@@ -70,6 +70,9 @@ const fullTitle = title === siteName ? siteName : `${title} | ${siteName}`;
           <li>
             <a href={localePath(locale, '/terms/')}>{t(locale, 'footer.terms')}</a>
           </li>
+          <li>
+            <a href={localePath(locale, '/credits/')}>{t(locale, 'footer.credits')}</a>
+          </li>
           {otherLocales.map((entry) => (
             <li>
               <a href={localePath(entry, path)} lang={entry} hreflang={entry}>

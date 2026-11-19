@@ -40,6 +40,8 @@ The joke is the false dilemma: picking a side in the Spanish Civil War gets you 
 
 **Result.** Verdict lettering, then the emblem, then the death toll ("60,000,000+" or "11,000,000+" in poster figures, with a one-line label such as "people killed worldwide by communist regimes"), then the button, then a small-print note giving the range of estimates and naming the sources. Faint rays behind them, like a poster. Screen readers hear the toll as one sentence ("Over 60,000,000 people killed worldwide by communist regimes") instead of the rolling digits.
 
+**Images behind the question and the results.** Faint posters behind the question and grey, tinted photos behind each result. See `docs/specs/background-images.md`.
+
 ## Motion
 
 | What | How | When |

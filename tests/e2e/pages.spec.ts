@@ -117,6 +117,8 @@ test.describe('every page is self-contained', () => {
     '/es/privacy/',
     '/terms/',
     '/es/terms/',
+    '/credits/',
+    '/es/credits/',
     '/dev/components/',
   ]) {
     test(`${path} has no errors and contacts no other site`, async ({ page, baseURL }) => {

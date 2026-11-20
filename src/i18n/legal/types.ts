@@ -15,7 +15,9 @@ export interface LegalDocument {
   sections: LegalSection[];
 }
 
+/** The site's plain-text pages. The about page shares the legal pages' shape. */
 export interface LegalContent {
+  about: LegalDocument;
   privacy: LegalDocument;
   terms: LegalDocument;
 }
